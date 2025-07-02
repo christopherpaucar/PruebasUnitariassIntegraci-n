@@ -1,15 +1,9 @@
 pipeline {
-    agent {
-        docker {
-            image 'maven:3.9.6-eclipse-temurin-17'
-            args '-v /var/run/docker.sock:/var/run/docker.sock'
-        }
-    }
+    agent any
 
     environment {
         DOCKER_IMAGE = 'unitarias-app:6'
         KUBECONFIG_CREDENTIAL_ID = 'kubeconfig'
-        DOCKER_HUB_CREDENTIAL_ID = 'docker-hub-credentials'
     }
 
     stages {
@@ -47,7 +41,7 @@ pipeline {
 
     post {
         always {
-            echo '🧹 Limpiando recursos Docker...'
+            echo '🧹 Limpiando imagen Docker...'
             sh 'docker rmi $DOCKER_IMAGE || true'
             sh 'docker system prune -f || true'
         }
